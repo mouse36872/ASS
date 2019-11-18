@@ -15,3 +15,36 @@ jobs:
       run: |
         echo Add other actions to build,
         echo test, and deploy your project.
+
+let scale = 1 / Float(n * 2)
+let recreatedSignal = recreatedObserved.map {
+    [$0.real * scale, $0.imag * scale]
+}.flatMap {
+    return $0
+
+var recreatedObserved = [DSPComplex](repeating: DSPComplex(real: 0, imag: 0),
+                                     count: halfN)
+
+vDSP_ztoc(&inverseOutput, 1,
+          &recreatedObserved, 2,
+          vDSP_Length(halfN))
+var inverseOutputReal = [Float](repeating: 0, count: halfN)
+var inverseOutputImag = [Float](repeating: 0, count: halfN)
+
+var inverseOutput = DSPSplitComplex(realp: &inverseOutputReal,
+                                    imagp: &inverseOutputImag)
+
+vDSP_fft_zrop(fftSetUp,
+              &forwardOutput, 1,
+              &inverseOutput, 1,
+              log2n,
+              FFTDirection(kFFTDirection_Inverse))
+let componentFrequencies = forwardOutputImag.enumerated().filter {
+    $0.element < -1
+}.map {
+    return $0.offset
+}
+        
+// Prints "[1, 5, 25, 30, 75, 100, 300, 500, 512, 1023]"
+print(componentFrequencies)
+
