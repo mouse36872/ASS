@@ -12,6 +12,11 @@ jobs:
     - name: Run a one-line script
       run: echo Hey, whores!
     - name: Run a multi-line script
-      run: |
+      run: |let scale = 1 / Float(n * 2)
+let recreatedSignal = recreatedObserved.map {
+    [$0.real * scale, $0.imag * scale]
+}.flatMap {
+    return $0
+}
         echo Add other actions to build,
         echo test, and deploy your project.
