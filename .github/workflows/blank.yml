@@ -15,3 +15,14 @@ jobs:
       run: |
         echo Add other actions to build,
         echo test, and deploy your project.
+
+var forwardOutputReal = [Float](repeating: 0, count: halfN)
+var forwardOutputImag = [Float](repeating: 0, count: halfN)
+var forwardOutput = DSPSplitComplex(realp: &forwardOutputReal,
+                                    imagp: &forwardOutputImag)
+
+vDSP_fft_zrop(fftSetUp,
+              &forwardInput, 1,
+              &forwardOutput, 1,
+              log2n,
+              FFTDirection(kFFTDirection_Forward))
